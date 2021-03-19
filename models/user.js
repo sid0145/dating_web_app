@@ -7,8 +7,12 @@ const userSchema = mongoose.Schema({
   firstname: { type: String },
   lastname: { type: String },
   fullname: { type: String },
+  password: {
+    type: String,
+  },
   image: {
     type: String,
+    default: "../public/assets/defaultImage.jpg",
   },
   email: {
     type: String,

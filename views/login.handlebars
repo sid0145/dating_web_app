@@ -36,24 +36,30 @@
         <div class="col-lg-7 px-5 pt-5" style="background-color: #ee8f54;">
             <h1 class="font-weight-bold py-3">Welcome</h1>
             <p>Sign In to your account</p>
-            <form action="">
+            <form action="/signIn" method="POST">
+                {{#each success}}
+                <p class="text-success">{{text}}</p>
+                {{/each}}
+                {{#each errors}}
+                <p class="text-danger">{{text}}</p>
+                {{/each}}
                 <div class="form-row">
                     <div class="col-lg-7">
-                        <input type="email" name="" placeholder="Email" class="form-control p-2 my-2" id="">
+                        <input type="email" name="email" placeholder="Email" class="form-control p-2 my-2">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col-lg-7">
-                        <input type="password" name="" placeholder="Password" class="form-control p-2 my-3" id="">
+                        <input type="password" name="password" placeholder="Password" class="form-control p-2 my-3">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col-lg-7">
-                        <button type="button" class="btn1 mt-2 mb-4">SignIn</button>
+                        <button type="submit" class="btn1 mt-2 mb-4">SignIn</button>
                     </div>
                 </div>
 
-                <p>do'nt have an account? <a href="#" class="text-primary">Resister</a></p>
+                <p>do'nt have an account? <a href="/newAccount" class="text-primary">Resister</a></p>
                 <hr>
                 <div class="col-lg-7">
                     <p class="ml-5 font-weight-bold">OR</p>

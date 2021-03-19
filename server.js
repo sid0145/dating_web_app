@@ -10,6 +10,8 @@ const {
   allowInsecurePrototypeAccess,
 } = require("@handlebars/allow-prototype-access");
 const path = require("path");
+const flash = require("connect-flash");
+const bcrypt = require("bcryptjs");
 
 const app = express();
 const PORT = process.env.PORT || 9000;
@@ -17,7 +19,10 @@ const PORT = process.env.PORT || 9000;
 //***********all  static import goes here */
 const globalConfig = require("./config/globalConfig");
 const User = require("./models/user");
+
+//************local passport module */
 require("./passport/facebook");
+require("./passport/local");
 
 //************helpers */
 const { requireLogin, ensureGuest } = require("./helpers/auth");
@@ -62,6 +67,13 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash("success_msg");
+  res.locals.error_msg = req.flash("error_msg");
+  res.locals.error = req.flash("error");
+  next();
+});
 
 //*************make user global for protecting route */
 
@@ -76,6 +88,10 @@ app.get("/", (req, res) => {
 });
 app.get("/login", ensureGuest, (req, res) => {
   res.render("login");
+});
+
+app.get("/newAccount", ensureGuest, (req, res) => {
+  res.render("resister");
 });
 
 app.get(
@@ -126,6 +142,76 @@ app.get("/logout", (req, res) => {
     });
   });
 });
+
+app.get("/loginErrors", (req, res) => {
+  let errors = [];
+  errors.push({ text: "please provide a valid username and password" });
+  res.render("login", {
+    errors: errors,
+  });
+});
+
+//*********************all post message goes here */
+app.post("/signUp", (req, res) => {
+  let errors = [];
+  if (req.body.password !== req.body.conpassword) {
+    errors.push({ text: "Password Does not Match" });
+  }
+  if (req.body.password.length < 5) {
+    errors.push({ text: "password should be atleast 5 char long." });
+  }
+  if (errors.length > 0) {
+    res.render("resister", {
+      errors: errors,
+      fullname: req.body.fullname,
+      email: req.body.email,
+      password: req.body.password,
+      conpassword: req.body.conpassword,
+    });
+  } else {
+    User.findOne({ email: req.body.email })
+      .then((user) => {
+        if (user) {
+          let errors = [];
+          errors.push({ text: "Email already exists" });
+          res.render("resister", {
+            errors: errors,
+          });
+        } else {
+          var salt = bcrypt.genSaltSync(10);
+          var hash = bcrypt.hashSync(req.body.password, salt);
+          const newUser = {
+            fullname: req.body.fullname,
+            password: hash,
+            email: req.body.email,
+          };
+          new User(newUser).save((err, user) => {
+            if (err) {
+              throw err;
+            }
+            if (user) {
+              let success = [];
+              success.push({
+                text: "account created. Please login to continue.",
+              });
+              res.render("login", {
+                success: success,
+              });
+            }
+          });
+        }
+      })
+      .catch();
+  }
+});
+
+app.post(
+  "/signIn",
+  passport.authenticate("local", {
+    successRedirect: "/profile",
+    failureRedirect: "/loginErrors",
+  })
+);
 
 app.listen(PORT, () => {
   console.log(`Server running on PORT: ${PORT}`);

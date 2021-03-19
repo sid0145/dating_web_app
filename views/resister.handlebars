@@ -1,0 +1,87 @@
+{{!-- <a href="/auth/facebook">
+    <button class="btn btn-primary">Login with Facebook</button>
+</a> --}}
+<style>
+    .row {
+        background-color: #fff;
+
+    }
+
+    .btn1 {
+        border: none;
+        outline: none;
+        height: 50px;
+        width: 100%;
+        background-color: black;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 4px;
+    }
+
+    .btn1:hover {
+        background-color: #0062cc;
+    }
+
+        {
+            {
+             !-- f37121 --
+        }
+    }
+</style>
+<section class="Form">
+    <div class="row no-gutters">
+        <div class="col-lg-5">
+            <img src="../public/assets/Y0Y0.png" class="img-fluid" alt="">
+        </div>
+        <div class="col-lg-7 px-5 pt-5" style="background-color: #ee8f54;">
+            <h1 class="font-weight-bold py-3">Welcome</h1>
+            <p>Sign Up to your account</p>
+            <form action="/signUp" method="POST" autocomplete="off">
+                {{#each errors}}
+                <div class="col-lg-7">
+
+
+                    <div class="alert alert-danger">
+
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        {{text}}
+                    </div>
+                </div>
+                {{/each}}
+                <div class="form-row">
+                    <div class="col-lg-7">
+                        <input type="text" name="fullname" placeholder="Fullname" value="{{fullname}}" required
+                            class="form-control p-2 my-2">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-lg-7">
+                        <input type="email" required name="email" value="{{email}}" placeholder="Email"
+                            class="form-control p-2 my-2">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-lg-7">
+                        <input type="password" required name="password" value="{{password}}" placeholder="Password"
+                            class="form-control p-2 my-3">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-lg-7">
+                        <input type="password" required name="conpassword" value="{{conpassword}}"
+                            placeholder="confirm Password" class="form-control p-2 my-3">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-lg-7">
+                        <button type="submit" class="btn1 mt-2 mb-4">SignUp</button>
+                    </div>
+                </div>
+
+                <p>aready have an account? <a href="/login" class="text-primary">Login</a></p>
+        </div>
+        </form>
+    </div>
+    </div>
+
+</section>
